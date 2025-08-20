@@ -1,0 +1,91 @@
+<div class="register-container mat-elevation-z8">
+	<form class="register-form" autocomplete="off" (ngSubmit)="register()">
+		<h2>Register</h2>
+		<mat-form-field appearance="outline" class="full-width">
+			<mat-label>Role</mat-label>
+			<mat-select required [(ngModel)]="form.role" name="role">
+				<mat-option value="patient">Patient</mat-option>
+				<mat-option value="doctor">Doctor</mat-option>
+				<mat-option value="employee">Employee</mat-option>
+				<mat-option value="admin">Admin</mat-option>
+			</mat-select>
+		</mat-form-field>
+		<mat-form-field appearance="outline" class="full-width">
+			<mat-label>Name</mat-label>
+			<input matInput type="text" required [(ngModel)]="form.name" name="name">
+		</mat-form-field>
+		<mat-form-field appearance="outline" class="full-width">
+			<mat-label>Email</mat-label>
+			<input matInput type="email" required [(ngModel)]="form.email" name="email">
+		</mat-form-field>
+		<mat-form-field appearance="outline" class="full-width">
+			<mat-label>Password</mat-label>
+			<input matInput type="password" required [(ngModel)]="form.password" name="password">
+		</mat-form-field>
+		<mat-form-field appearance="outline" class="full-width">
+			<mat-label>Confirm Password</mat-label>
+			<input matInput type="password" required [(ngModel)]="form.confirm" name="confirm">
+		</mat-form-field>
+		<mat-form-field appearance="outline" class="full-width">
+			<mat-label>Phone Number</mat-label>
+			<input matInput type="tel" required [(ngModel)]="form.phone" name="phone">
+		</mat-form-field>
+		<mat-form-field appearance="outline" class="full-width">
+			<mat-label>Gender</mat-label>
+			<mat-select required [(ngModel)]="form.gender" name="gender">
+				<mat-option value="male">Male</mat-option>
+				<mat-option value="female">Female</mat-option>
+				<mat-option value="other">Other</mat-option>
+			</mat-select>
+		</mat-form-field>
+		<mat-form-field appearance="outline" class="full-width">
+			<mat-label>Province</mat-label>
+			<input matInput type="text" required [(ngModel)]="form.province" name="province">
+		</mat-form-field>
+		<mat-form-field appearance="outline" class="full-width">
+			<mat-label>City</mat-label>
+			<input matInput type="text" required [(ngModel)]="form.city" name="city">
+		</mat-form-field>
+		<!-- global disease placeholder removed; patient-only block provides disease input -->
+		<mat-form-field appearance="outline" class="full-width">
+			<mat-label>Age</mat-label>
+			<input matInput type="number" min="0" required [(ngModel)]="form.age" name="age">
+		</mat-form-field>
+		<!-- patient-only fields -->
+		<div *ngIf="form.role === 'patient'">
+			<mat-form-field appearance="outline" class="full-width">
+				<mat-label>Disease Type</mat-label>
+				<input matInput type="text" required [(ngModel)]="form.disease" name="disease">
+			</mat-form-field>
+
+			<mat-form-field appearance="outline" class="full-width">
+				<mat-label>Select Doctor</mat-label>
+				<mat-select required [(ngModel)]="form.doctorId" name="doctorId">
+					<mat-option value="">-- Select Doctor --</mat-option>
+					<mat-option *ngFor="let d of doctors" [value]="d.id">{{d.name}} {{d.speciality ? (' - ' + d.speciality) : ''}}</mat-option>
+				</mat-select>
+			</mat-form-field>
+		</div>
+		<!-- doctor-specific fields -->
+		<div *ngIf="form.role === 'doctor'">
+			<mat-form-field appearance="outline" class="full-width">
+				<mat-label>Speciality</mat-label>
+				<input matInput type="text" [(ngModel)]="form.speciality" name="speciality">
+			</mat-form-field>
+			<mat-form-field appearance="outline" class="full-width">
+				<mat-label>License / Reg. No.</mat-label>
+				<input matInput type="text" [(ngModel)]="form.license" name="license">
+			</mat-form-field>
+		</div>
+				<div class="validation-messages">
+					<div *ngIf="form.password && form.confirm && form.password !== form.confirm" class="error">Passwords do not match.</div>
+					<div *ngIf="form.role === 'patient' && (!form.disease || !form.doctorId)" class="error">Patient must select a doctor and specify a disease.</div>
+					<div *ngIf="form.role === 'doctor' && !form.speciality" class="error">Doctor must specify a speciality.</div>
+				</div>
+				<button mat-raised-button color="primary" class="full-width" type="submit" [disabled]="!isFormValid()">Register</button>
+		<div class="login-link">
+			<span>Already have an account?</span>
+			<a routerLink="/login">Login</a>
+		</div>
+	</form>
+</div>

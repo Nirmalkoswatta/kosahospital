@@ -1,0 +1,23 @@
+<section class="dashboard doctor-dashboard">
+	<header class="db-header">
+		<h1>Doctor Dashboard</h1>
+		<div class="header-actions">
+			<button mat-stroked-button>Schedule</button>
+			<button mat-flat-button color="primary">New Note</button>
+		</div>
+	</header>
+
+	<div class="appointments card">
+		<h3>Today's Appointments</h3>
+		<mat-list>
+			<mat-list-item *ngFor="let a of appointments">
+				<div class="ap-item">
+					<div class="ap-patient">Patient ID: {{ a.patientId }}</div>
+					<div class="ap-time">When: {{ a.datetime || 'TBD' }}</div>
+					<div class="ap-status">Status: {{ a.status }}</div>
+					<button mat-mini-button color="primary" (click)="accept(a)">Accept</button>
+				</div>
+			</mat-list-item>
+		</mat-list>
+	</div>
+</section>

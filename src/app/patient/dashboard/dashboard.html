@@ -1,0 +1,17 @@
+<section class="dashboard patient-dashboard">
+	<header class="db-header">
+		<h1>Patient Dashboard</h1>
+	</header>
+
+	<div class="welcome card">
+		<h3>Welcome back, {{ userName }}</h3>
+		<p>Your upcoming appointments: <strong>{{ upcoming }}</strong></p>
+	</div>
+
+	<div class="doctors card">
+		<h3>Available Doctors</h3>
+		<mat-list>
+			<mat-list-item *ngFor="let d of doctors">Dr. {{ d.name }} — {{ d.specialty }}</mat-list-item>
+		</mat-list>
+	</div>
+</section>

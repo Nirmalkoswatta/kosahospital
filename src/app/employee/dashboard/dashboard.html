@@ -1,0 +1,19 @@
+<section class="dashboard employee-dashboard">
+	<header class="db-header">
+		<h1>Employee Dashboard</h1>
+	</header>
+
+	<div class="stats">
+		<div class="card">Available Doctors: <strong>{{ doctors.length }}</strong></div>
+		<div class="card">Registered Patients: <strong>{{ patients.length }}</strong></div>
+	</div>
+
+	<div class="lists">
+		<div class="list card">
+			<h3>Doctors</h3>
+			<mat-list>
+				<mat-list-item *ngFor="let d of doctors">Dr. {{ d.name }} — {{ d.specialty }}</mat-list-item>
+			</mat-list>
+		</div>
+	</div>
+</section>

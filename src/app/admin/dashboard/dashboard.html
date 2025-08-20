@@ -1,0 +1,43 @@
+<section class="dashboard admin-dashboard">
+	<header class="db-header">
+		<h1>Admin Dashboard</h1>
+		<div class="header-actions">
+			<button mat-stroked-button>Export</button>
+			<button mat-flat-button color="primary">Add User</button>
+		</div>
+	</header>
+
+	<div class="stats-grid">
+		<div class="stat card">
+			<div class="stat-title">Total Patients</div>
+			<div class="stat-value">124</div>
+		</div>
+		<div class="stat card">
+			<div class="stat-title">Total Doctors</div>
+			<div class="stat-value">28</div>
+		</div>
+		<div class="stat card">
+			<div class="stat-title">Employees</div>
+			<div class="stat-value">15</div>
+		</div>
+		<div class="stat card">
+			<div class="stat-title">Pending Appointments</div>
+			<div class="stat-value">9</div>
+		</div>
+	</div>
+
+	<div class="lists">
+		<div class="list card">
+			<h3>Recent Patients</h3>
+			<mat-list>
+				<mat-list-item *ngFor="let p of recentPatients">{{ p.name }} — {{ p.age }} yrs</mat-list-item>
+			</mat-list>
+		</div>
+		<div class="list card">
+			<h3>Doctors</h3>
+			<mat-list>
+				<mat-list-item *ngFor="let d of doctors">Dr. {{ d.name }} — {{ d.specialty }}</mat-list-item>
+			</mat-list>
+		</div>
+	</div>
+</section>

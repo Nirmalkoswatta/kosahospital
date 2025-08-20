@@ -1,0 +1,20 @@
+:host { display: block; }
+
+.admin-dashboard { padding: 1.5rem; }
+
+.db-header { display:flex; justify-content:space-between; align-items:center; gap:1rem; margin-bottom:1rem }
+.db-header h1 { margin:0; font-size:1.5rem }
+
+.stats-grid { display:grid; gap:1rem; grid-template-columns: repeat(4, 1fr); margin-bottom:1rem }
+.stat { padding:1rem; text-align:center }
+.stat-title { color:#475569; font-size:0.85rem }
+.stat-value { font-size:1.5rem; font-weight:700 }
+
+.lists { display:grid; grid-template-columns: 1fr 1fr; gap:1rem }
+.list { padding:1rem }
+
+@media (max-width: 800px) {
+	.stats-grid { grid-template-columns: repeat(2, 1fr); }
+	.lists { grid-template-columns: 1fr }
+}
+
