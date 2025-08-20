@@ -1,11 +1,28 @@
 import { bootstrapApplication } from '@angular/platform-browser';
+import { importProvidersFrom } from '@angular/core';
 import { appConfig } from './app/app.config';
 import { App } from './app/app';
 import { ApplicationRef } from '@angular/core';
 import { FirebaseService } from './app/core/firebase.service';
 import { DataService } from './app/core/data';
+// Toastr
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
 
-bootstrapApplication(App, appConfig)
+bootstrapApplication(App, {
+  ...appConfig,
+  providers: [
+    // keep existing providers from appConfig
+    ...((appConfig && (appConfig as any).providers) || []),
+    importProvidersFrom(BrowserAnimationsModule),
+    importProvidersFrom(ToastrModule.forRoot({
+      positionClass: 'toast-top-right',
+      timeOut: 3000,
+      closeButton: true,
+      progressBar: true,
+    })),
+  ]
+})
   .then((appRef: any) => {
     try {
       const injector = (appRef && appRef.injector) ? appRef.injector : appRef;

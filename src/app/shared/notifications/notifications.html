@@ -1,0 +1,17 @@
+<div class="notifications">
+  <div *ngFor="let t of ns.getAll()" class="toast" [ngClass]="t.type">
+    <div class="icon" aria-hidden>
+      <ng-container [ngSwitch]="t.type">
+        <span *ngSwitchCase="'success'">✔</span>
+        <span *ngSwitchCase="'error'">✖</span>
+        <span *ngSwitchCase="'info'">i</span>
+        <span *ngSwitchCase="'warn'">!</span>
+      </ng-container>
+    </div>
+    <div class="content">
+      <div class="title" *ngIf="t.title">{{ t.title }}</div>
+      <div class="message">{{ t.message }}</div>
+    </div>
+    <button class="close" (click)="ns.remove(t.id)" aria-label="close">&times;</button>
+  </div>
+</div>

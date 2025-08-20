@@ -7,20 +7,21 @@
 }
 
 .login-container {
-	max-width: 420px;
+	/* make the login container wider (~2x) for desktop */
+	max-width: 960px;
+	width: 80%;
 	margin: 0 auto;
-	padding: 2rem;
-	border-radius: 12px;
-		max-width: 640px;
-		margin: 0 auto;
-		padding: 2rem;
-		/* use shared form card style */
-		border-radius: 14px;
-		background: rgba(255,255,255,0.8);
-		box-shadow: 0 12px 48px rgba(12,18,28,0.12);
+	padding: 2.5rem;
+	border-radius: 14px;
+	/* permanently semi-transparent so background video shows through */
+	background: rgba(255,255,255,0.78);
+	box-shadow: 0 12px 48px rgba(12,18,28,0.12);
+	backdrop-filter: blur(8px) saturate(1.03);
+	border: 1px solid rgba(255,255,255,0.18);
 }
 
 .login-container:hover {
+	/* only elevate on hover; don't change opacity */
 	transform: translateY(-4px);
 	box-shadow: 0 12px 40px rgba(16,24,40,0.16);
 }
@@ -56,7 +57,7 @@
 	text-decoration: underline;
 }
 
-@media (max-width: 480px) {
-		.login-container { margin: 3vh 1rem; padding: 1rem; }
+@media (max-width: 900px) {
+	.login-container { max-width: 640px; margin: 3vh 1rem; padding: 1rem; width: auto; }
 }
 
