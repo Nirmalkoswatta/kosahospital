@@ -1,0 +1,62 @@
+:host {
+	display: block;
+	height: 100vh; /* full viewport to allow vertical centering */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.login-container {
+	max-width: 420px;
+	margin: 0 auto;
+	padding: 2rem;
+	border-radius: 12px;
+		max-width: 640px;
+		margin: 0 auto;
+		padding: 2rem;
+		/* use shared form card style */
+		border-radius: 14px;
+		background: rgba(255,255,255,0.8);
+		box-shadow: 0 12px 48px rgba(12,18,28,0.12);
+}
+
+.login-container:hover {
+	transform: translateY(-4px);
+	box-shadow: 0 12px 40px rgba(16,24,40,0.16);
+}
+
+.login-form h2 {
+	margin: 0 0 1rem 0;
+	font-weight: 600;
+	color: #0f172a;
+}
+
+.full-width { width: 100%; }
+
+.login-form {
+	display: grid;
+	gap: 0.9rem;
+}
+
+.register-link, .login-link {
+	display: flex;
+	justify-content: center;
+	gap: 0.5rem;
+	margin-top: 0.5rem;
+	color: #334155;
+}
+
+.register-link a {
+	color: #1976d2; /* Material blue */
+	text-decoration: none;
+	font-weight: 600;
+}
+
+.register-link a:hover {
+	text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+		.login-container { margin: 3vh 1rem; padding: 1rem; }
+}
+

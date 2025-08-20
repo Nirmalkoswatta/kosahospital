@@ -1,0 +1,16 @@
+:host { display: block; height: 100vh; display: flex; align-items: center; justify-content: center; }
+
+.register-container { max-width: 1100px; padding: 2.2rem; border-radius: 14px; background: rgba(255,255,255,0.82); box-shadow: 0 18px 64px rgba(12,18,28,0.14); backdrop-filter: blur(6px); }
+
+.register-form { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.9rem; align-items: start; }
+
+.register-form h2 { grid-column: 1 / -1; margin: 0 0 0.5rem 0; font-weight: 700; }
+
+.full-width { width: 100%; }
+
+.register-form mat-form-field { width: 100%; }
+
+.register-form button { grid-column: 1 / -1; }
+
+@media (max-width: 960px) { .register-form { grid-template-columns: 1fr; } .register-container { margin: 2vh 1rem; } }
+

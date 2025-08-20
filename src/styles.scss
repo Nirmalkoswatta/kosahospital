@@ -1,0 +1,105 @@
+
+// Include theming for Angular Material with `mat.theme()`.
+// This Sass mixin will define CSS variables that are used for styling Angular Material
+// components according to the Material 3 design spec.
+// Learn more about theming and how to use it for your application's
+// custom components at https://material.angular.dev/guide/theming
+@use '@angular/material' as mat;
+
+html {
+  @include mat.theme((
+    color: (
+      primary: mat.$azure-palette,
+      tertiary: mat.$blue-palette,
+    ),
+    typography: Roboto,
+    density: 0,
+  ));
+}
+
+body {
+  // Default the application to a light color theme. This can be changed to
+  // `dark` to enable the dark color theme, or to `light dark` to defer to the
+  // user's system settings.
+  color-scheme: light;
+
+  // Set a default background, font and text colors for the application using
+  // Angular Material's system-level CSS variables.
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+
+  // Reset the user agent margin.
+  margin: 0;
+
+  /* make sure content sits above background video */
+  position: relative;
+  z-index: 1;
+}
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* App helpers */
+.card {
+  border-radius: 12px;
+  background: var(--mat-sys-surface, #ffffff);
+  box-shadow: 0 6px 24px rgba(16,24,40,0.08);
+}
+
+.center-screen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+/* Animated background */
+:root {
+  --g1: #ff7a7a;
+  --g2: #ffb86b;
+  --g3: #7afcff;
+  --g4: #9b6bff;
+}
+
+/* fallback animated gradient kept but video will be the primary background */
+body {
+  background: linear-gradient(120deg, var(--g1), var(--g2), var(--g3), var(--g4));
+  background-size: 300% 300%;
+  animation: gradientShift 12s ease infinite;
+}
+
+/* Background video styles */
+#bg-video {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  z-index: 0; /* behind the app */
+  object-fit: cover;
+  filter: brightness(0.7) saturate(1.05);
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* make forms slightly elevated and wider by default */
+.form-card {
+  width: min(880px, 92%);
+  max-width: 920px;
+  padding: 2rem;
+  border-radius: 14px;
+  /* slightly more transparent so background video shows through */
+  background: rgba(255,255,255,0.78);
+  box-shadow: 0 12px 48px rgba(12,18,28,0.18);
+  backdrop-filter: blur(8px) saturate(1.02);
+  transition: transform 300ms ease, box-shadow 300ms ease;
+}
+
+.form-card:hover { transform: translateY(-6px); box-shadow: 0 18px 60px rgba(12,18,28,0.2); }
