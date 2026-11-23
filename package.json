@@ -6,7 +6,8 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "test:logic": "node --test src/app/core/scheduling.spec.ts"
   },
   "prettier": {
     "printWidth": 100,

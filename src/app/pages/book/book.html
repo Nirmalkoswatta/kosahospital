@@ -79,7 +79,7 @@
             <button type="button" class="day" [attr.aria-pressed]="date() === d.iso" [disabled]="!d.free" (click)="pickDate(d.iso)">
               <span class="small">{{ d.wd }}</span>
               <strong>{{ d.day }}</strong>
-              <span class="tiny">{{ d.free ? d.free + ' free' : 'Closed' }}</span>
+              <span class="tiny">{{ d.free ? d.free + ' free' : 'No slots' }}</span>
             </button>
           }
         </div>
