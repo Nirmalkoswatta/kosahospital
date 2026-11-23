@@ -2,7 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { NotificationService } from '../../core/notification.service';
-import { DEMO_PASSWORD, Store } from '../../core/store';
+import { Store } from '../../core/store';
 import { AuthVisual } from './auth-visual';
 
 @Component({
@@ -38,14 +38,6 @@ import { AuthVisual } from './auth-visual';
         <button class="btn" type="submit" [disabled]="busy()">
           @if (busy()) { Signing in… } @else { Sign in <span class="mi" aria-hidden="true">arrow_forward</span> }
         </button>
-        <div class="demo">
-          <p>Demo accounts (password <code>{{ demoPw }}</code>) — tap to fill:</p>
-          <div class="chips">
-            @for (d of demo; track d.email) {
-              <button type="button" class="chip" (click)="email = d.email; password = demoPw">{{ d.label }}</button>
-            }
-          </div>
-        </div>
         <p class="switch">New patient? <a routerLink="/register">Create an account</a></p>
       </form>
     </main>
@@ -60,13 +52,6 @@ export class Login {
   show = signal(false);
   busy = signal(false);
   error = signal('');
-  demoPw = DEMO_PASSWORD;
-  demo = [
-    { label: 'Patient', email: 'patient@kosa.lk' },
-    { label: 'Doctor', email: 'dr.rajapaksha@kosa.lk' },
-    { label: 'Front desk', email: 'reception@kosa.lk' },
-    { label: 'Admin', email: 'admin@kosa.lk' },
-  ];
 
   async submit() {
     this.busy.set(true);

@@ -6,8 +6,6 @@
 .pw .icon-btn { position: absolute; right: 0; top: 0; color: var(--muted); }
 .pw .input { padding-right: 3rem; }
 .alert { display: flex; gap: 0.5rem; align-items: center; padding: 0.7rem 0.9rem; border-radius: 12px; background: var(--danger-soft); color: var(--danger); font-weight: 500; }
-.demo { border: 1px dashed var(--line); border-radius: 14px; padding: 0.9rem; background: var(--surface); }
-.demo p { margin: 0 0 0.6rem; font-size: 0.85rem; color: var(--muted); }
 .switch { text-align: center; color: var(--muted); }
 @media (max-width: 900px) {
   :host { grid-template-columns: 1fr; }
