@@ -1,0 +1,170 @@
+@switch (me().role) {
+  @case ('patient') {
+    <div class="page-head">
+      <div>
+        <h1>Your health overview</h1>
+        <p>Appointments, prescriptions and bills at a glance.</p>
+      </div>
+      <a class="btn" routerLink="/app/book"><span class="mi" aria-hidden="true">calendar_add_on</span>Book a visit</a>
+    </div>
+
+    <div class="grid hero-grid">
+      @if (next(); as n) {
+        <article class="next-card rise" appTilt="6">
+          <p class="kicker pop">Next appointment</p>
+          <h2 class="pop">{{ longDate(n.date) }} · {{ n.time }}</h2>
+          <div class="row pop">
+            <span class="avatar">{{ store.user(n.doctorId)?.name | initials }}</span>
+            <div>
+              <strong>{{ store.user(n.doctorId)?.name }}</strong>
+              <div class="small">{{ store.department(store.user(n.doctorId)?.departmentId)?.name }}</div>
+            </div>
+            <span class="badge" [class]="'badge ' + n.status">{{ n.status }}</span>
+          </div>
+          <p class="small reason">{{ n.reason }}</p>
+        </article>
+      } @else {
+        <article class="next-card rise" appTilt="6">
+          <p class="kicker pop">Next appointment</p>
+          <h2 class="pop">Nothing booked</h2>
+          <p class="pop">Pick a doctor and a free slot in a few taps.</p>
+          <a class="btn light sm pop" routerLink="/app/book">Book now</a>
+        </article>
+      }
+      <div class="grid cols-2 mini">
+        <div class="card stat rise" style="--i: 1"><span class="ico"><span class="mi" aria-hidden="true">event_upcoming</span></span><div><div class="value">{{ upcoming().length }}</div><div class="label">Upcoming visits</div></div></div>
+        <div class="card stat rise" style="--i: 2"><span class="ico"><span class="mi" aria-hidden="true">clinical_notes</span></span><div><div class="value">{{ myRecords().length }}</div><div class="label">Visit records</div></div></div>
+        <a class="card stat rise link" style="--i: 3" routerLink="/app/billing"><span class="ico warn"><span class="mi" aria-hidden="true">payments</span></span><div><div class="value">{{ myUnpaid() | lkr }}</div><div class="label">Due to pay</div></div></a>
+        <a class="card stat rise link" style="--i: 4" routerLink="/app/records"><span class="ico"><span class="mi" aria-hidden="true">prescriptions</span></span><div><div class="value">{{ myRecords()[0]?.prescriptions?.length ?? 0 }}</div><div class="label">Active medicines</div></div></a>
+      </div>
+    </div>
+
+    <div class="grid cols-2 mt">
+      <section class="card">
+        <div class="card-head"><h2>Upcoming</h2><a routerLink="/app/appointments" class="small">See all</a></div>
+        <app-appt-list [items]="upcoming()" empty="No upcoming appointments." />
+      </section>
+      <section class="card">
+        <div class="card-head"><h2>Latest prescription</h2><a routerLink="/app/records" class="small">History</a></div>
+        @if (myRecords()[0]; as r) {
+          <p><strong>{{ r.diagnosis }}</strong> <span class="muted small">· {{ r.date }} · {{ store.user(r.doctorId)?.name }}</span></p>
+          <ul class="list">
+            @for (p of r.prescriptions; track $index) {
+              <li class="list-item"><span class="mi" aria-hidden="true">medication</span><div class="grow"><strong>{{ p.drug }} {{ p.dose }}</strong><div class="small muted">{{ p.frequency }} · {{ p.days }} days</div></div></li>
+            } @empty {
+              <li class="muted small">No medicines prescribed.</li>
+            }
+          </ul>
+        } @else {
+          <div class="empty"><span class="mi" aria-hidden="true">prescriptions</span>No records yet.</div>
+        }
+      </section>
+    </div>
+  }
+
+  @case ('doctor') {
+    <div class="page-head">
+      <div>
+        <h1>Today's clinic</h1>
+        <p>{{ store.department(me().departmentId)?.name }} · {{ me().specialty }}</p>
+      </div>
+      <a class="btn ghost" routerLink="/app/schedule"><span class="mi" aria-hidden="true">schedule</span>Edit hours</a>
+    </div>
+    <div class="grid cols-4">
+      <div class="card stat rise"><span class="ico"><span class="mi" aria-hidden="true">pending_actions</span></span><div><div class="value">{{ queue().length }}</div><div class="label">In today's queue</div></div></div>
+      <div class="card stat rise" style="--i: 1"><span class="ico warn"><span class="mi" aria-hidden="true">notification_important</span></span><div><div class="value">{{ requests().length }}</div><div class="label">Requests to review</div></div></div>
+      <div class="card stat rise" style="--i: 2"><span class="ico"><span class="mi" aria-hidden="true">task_alt</span></span><div><div class="value">{{ docDone() }}</div><div class="label">Visits completed</div></div></div>
+      <div class="card stat rise" style="--i: 3"><span class="ico"><span class="mi" aria-hidden="true">groups</span></span><div><div class="value">{{ docPatients() }}</div><div class="label">Patients seen</div></div></div>
+    </div>
+    <div class="grid cols-2 mt">
+      <section class="card">
+        <div class="card-head"><h2>Queue</h2><span class="small muted">Confirmed &amp; checked-in today</span></div>
+        <app-appt-list [items]="queue()" empty="No patients waiting today." />
+      </section>
+      <section class="card">
+        <div class="card-head"><h2>New requests</h2></div>
+        <app-appt-list [items]="requests()" empty="No pending requests." />
+      </section>
+    </div>
+  }
+
+  @case ('staff') {
+    <div class="page-head">
+      <div>
+        <h1>Front desk</h1>
+        <p>{{ me().position }} · today's flow across all clinics.</p>
+      </div>
+      <div class="row">
+        <a class="btn ghost" routerLink="/app/patients"><span class="mi" aria-hidden="true">person_add</span>Register walk-in</a>
+        <a class="btn" routerLink="/app/book"><span class="mi" aria-hidden="true">calendar_add_on</span>Book visit</a>
+      </div>
+    </div>
+    <div class="grid cols-4">
+      <div class="card stat rise"><span class="ico"><span class="mi" aria-hidden="true">event</span></span><div><div class="value">{{ todayAll().length }}</div><div class="label">Visits today</div></div></div>
+      <div class="card stat rise" style="--i: 1"><span class="ico"><span class="mi" aria-hidden="true">how_to_reg</span></span><div><div class="value">{{ checkedIn() }}</div><div class="label">Checked in</div></div></div>
+      <div class="card stat rise" style="--i: 2"><span class="ico warn"><span class="mi" aria-hidden="true">receipt_long</span></span><div><div class="value">{{ unpaid().length }}</div><div class="label">Unpaid invoices</div></div></div>
+      <div class="card stat rise" style="--i: 3"><span class="ico"><span class="mi" aria-hidden="true">payments</span></span><div><div class="value">{{ unpaidTotal() | lkr }}</div><div class="label">Outstanding</div></div></div>
+    </div>
+    <section class="card mt">
+      <div class="card-head"><h2>Today's appointments</h2><a routerLink="/app/appointments" class="small">All appointments</a></div>
+      <app-appt-list [items]="todayAll()" empty="No visits scheduled today." />
+    </section>
+  }
+
+  @case ('admin') {
+    <div class="page-head">
+      <div>
+        <h1>Hospital overview</h1>
+        <p>People, activity and revenue across Kosa.</p>
+      </div>
+      <a class="btn" routerLink="/app/people/doctors"><span class="mi" aria-hidden="true">person_add</span>Add doctor</a>
+    </div>
+    <div class="grid cols-4">
+      <a class="card stat rise link" routerLink="/app/patients"><span class="ico"><span class="mi" aria-hidden="true">groups</span></span><div><div class="value">{{ store.patients().length }}</div><div class="label">Patients</div></div></a>
+      <a class="card stat rise link" style="--i: 1" routerLink="/app/people/doctors"><span class="ico"><span class="mi" aria-hidden="true">stethoscope</span></span><div><div class="value">{{ store.doctors().length }}</div><div class="label">Doctors</div></div></a>
+      <a class="card stat rise link" style="--i: 2" routerLink="/app/people/staff"><span class="ico"><span class="mi" aria-hidden="true">badge</span></span><div><div class="value">{{ store.staff().length }}</div><div class="label">Staff</div></div></a>
+      <a class="card stat rise link" style="--i: 3" routerLink="/app/billing"><span class="ico ok"><span class="mi" aria-hidden="true">account_balance_wallet</span></span><div><div class="value">{{ revenue() | lkr }}</div><div class="label">Revenue collected</div></div></a>
+    </div>
+    <div class="grid cols-2 mt">
+      <section class="card">
+        <div class="card-head"><h2>Next 7 days</h2><span class="small muted">Active appointments</span></div>
+        <div class="bars" role="img" [attr.aria-label]="weekLabel()">
+          @for (w of week(); track w.d; let i = $index) {
+            <div class="bar-col">
+              <span class="bar-n">{{ w.n }}</span>
+              <div class="bar" [style.height.%]="w.pct" [style.--i]="i"></div>
+              <span class="bar-l">{{ w.label }}</span>
+            </div>
+          }
+        </div>
+      </section>
+      <section class="card">
+        <div class="card-head"><h2>Department load</h2><span class="small muted">All-time bookings</span></div>
+        <ul class="list">
+          @for (d of deptLoad(); track d.name; let i = $index) {
+            <li class="hbar rise" [style.--i]="i">
+              <span class="mi" aria-hidden="true">{{ d.icon }}</span>
+              <span class="hbar-name">{{ d.name }}</span>
+              <span class="hbar-track"><span class="hbar-fill" [style.width.%]="d.pct"></span></span>
+              <strong>{{ d.n }}</strong>
+            </li>
+          }
+        </ul>
+      </section>
+    </div>
+    <div class="grid cols-2 mt">
+      <section class="card">
+        <div class="card-head"><h2>Today</h2><a routerLink="/app/appointments" class="small">All</a></div>
+        <app-appt-list [items]="todayAll()" empty="No visits today." />
+      </section>
+      <section class="card">
+        <div class="card-head"><h2>Newest patients</h2><a routerLink="/app/patients" class="small">All</a></div>
+        <ul class="list">
+          @for (p of newestPatients(); track p.id) {
+            <li><a class="list-item" [routerLink]="['/app/patients', p.id]"><span class="avatar">{{ p.name | initials }}</span><div class="grow"><strong>{{ p.name }}</strong><div class="small muted">{{ p.email }}</div></div><span class="mi" aria-hidden="true">chevron_right</span></a></li>
+          }
+        </ul>
+      </section>
+    </div>
+  }
+}

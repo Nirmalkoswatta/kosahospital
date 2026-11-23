@@ -1,0 +1,124 @@
+<div class="page-head">
+  <div>
+    <h1>{{ isStaff() ? 'Book for a patient' : 'Book a visit' }}</h1>
+    <p>Only real free slots are shown, so there is no double booking.</p>
+  </div>
+</div>
+
+<ol class="stepper" aria-label="Booking steps">
+  @for (s of steps(); track s; let i = $index) {
+    <li [class.done]="i < step()" [class.current]="i === step()" [attr.aria-current]="i === step() ? 'step' : null">
+      <span class="dot">@if (i < step()) { <span class="mi" aria-hidden="true">check</span> } @else { {{ i + 1 }} }</span>
+      <span class="lbl">{{ s }}</span>
+    </li>
+  }
+</ol>
+
+<div class="stage">
+  @switch (stepName()) {
+    @case ('Patient') {
+      <section class="card flip" aria-labelledby="h-p">
+        <h2 id="h-p">Who is the appointment for?</h2>
+        <label class="field">
+          <span>Search patients</span>
+          <input class="input" type="search" placeholder="Name, email or phone" [ngModel]="patientQuery()" (ngModelChange)="patientQuery.set($event)" />
+        </label>
+        <ul class="list mt">
+          @for (p of patientMatches(); track p.id) {
+            <li>
+              <button type="button" class="list-item pick" [attr.aria-pressed]="patientId() === p.id" (click)="patientId.set(p.id); next()">
+                <span class="avatar">{{ p.name | initials }}</span>
+                <span class="grow"><strong>{{ p.name }}</strong><span class="small muted block">{{ p.email }} · {{ p.phone }}</span></span>
+                <span class="mi" aria-hidden="true">chevron_right</span>
+              </button>
+            </li>
+          } @empty {
+            <li class="muted">No match. Register the patient on the Patients page first.</li>
+          }
+        </ul>
+      </section>
+    }
+    @case ('Department') {
+      <section class="flip" aria-labelledby="h-d">
+        <h2 id="h-d">Choose a department</h2>
+        <div class="grid cols-3">
+          @for (d of store.departments(); track d.id; let i = $index) {
+            <button type="button" class="card option rise" [style.--i]="i" appTilt [attr.aria-pressed]="deptId() === d.id" (click)="pickDept(d.id)">
+              <span class="ico pop"><span class="mi" aria-hidden="true">{{ d.icon }}</span></span>
+              <strong class="pop">{{ d.name }}</strong>
+              <span class="small muted">{{ d.description }}</span>
+            </button>
+          }
+        </div>
+      </section>
+    }
+    @case ('Doctor') {
+      <section class="flip" aria-labelledby="h-doc">
+        <h2 id="h-doc">Pick your doctor</h2>
+        <div class="grid cols-3">
+          @for (d of doctorsInDept(); track d.id; let i = $index) {
+            <button type="button" class="card option rise" [style.--i]="i" appTilt [attr.aria-pressed]="doctorId() === d.id" (click)="pickDoctor(d.id)">
+              <span class="avatar lg pop">{{ d.name | initials }}</span>
+              <strong class="pop">{{ d.name }}</strong>
+              <span class="small muted">{{ d.specialty }} · {{ d.experience }} yrs</span>
+              <span class="small">{{ d.bio }}</span>
+              <span class="badge confirmed">{{ d.fee ?? 0 | lkr }}</span>
+            </button>
+          } @empty {
+            <div class="card empty"><span class="mi" aria-hidden="true">person_off</span>No doctors in this department yet.</div>
+          }
+        </div>
+      </section>
+    }
+    @case ('Time') {
+      <section class="card flip" aria-labelledby="h-t">
+        <h2 id="h-t">When suits you?</h2>
+        <p class="muted small">{{ doctor()?.name }} · {{ doctor()?.slotMins }}-minute visits</p>
+        <div class="days" role="group" aria-label="Day">
+          @for (d of days(); track d.iso) {
+            <button type="button" class="day" [attr.aria-pressed]="date() === d.iso" [disabled]="!d.free" (click)="pickDate(d.iso)">
+              <span class="small">{{ d.wd }}</span>
+              <strong>{{ d.day }}</strong>
+              <span class="tiny">{{ d.free ? d.free + ' free' : 'No slots' }}</span>
+            </button>
+          }
+        </div>
+        @if (date()) {
+          <h3 class="mt">{{ longDate(date()) }}</h3>
+          <div class="chips" role="group" aria-label="Time">
+            @for (t of slots(); track t; let i = $index) {
+              <button type="button" class="chip rise" [style.--i]="i" [attr.aria-pressed]="time() === t" (click)="time.set(t)">{{ t }}</button>
+            } @empty {
+              <p class="muted">No free times on this day.</p>
+            }
+          </div>
+        }
+      </section>
+    }
+    @case ('Confirm') {
+      <section class="card flip summary" aria-labelledby="h-c">
+        <h2 id="h-c">Confirm your visit</h2>
+        <dl class="sum">
+          @if (isStaff()) { <div><dt>Patient</dt><dd>{{ store.user(patientId())?.name }}</dd></div> }
+          <div><dt>Doctor</dt><dd>{{ doctor()?.name }}</dd></div>
+          <div><dt>Department</dt><dd>{{ store.department(deptId())?.name }}</dd></div>
+          <div><dt>When</dt><dd>{{ longDate(date()) }} at {{ time() }}</dd></div>
+          <div><dt>Consultation fee</dt><dd>{{ doctor()?.fee ?? 0 | lkr }}</dd></div>
+        </dl>
+        <label class="field">
+          <span>Reason for visit</span>
+          <textarea class="input" name="reason" maxlength="300" [(ngModel)]="reason" placeholder="e.g. Fever for three days, mild headache"></textarea>
+          <small class="hint">Shared only with your doctor.</small>
+        </label>
+        <button class="btn mt" type="button" (click)="confirm()"><span class="mi" aria-hidden="true">event_available</span>Request appointment</button>
+      </section>
+    }
+  }
+</div>
+
+<div class="nav-row">
+  <button class="btn ghost" type="button" (click)="back()" [disabled]="step() === 0"><span class="mi" aria-hidden="true">arrow_back</span>Back</button>
+  @if (stepName() !== 'Confirm') {
+    <button class="btn" type="button" (click)="next()" [disabled]="!canNext()">Continue<span class="mi" aria-hidden="true">arrow_forward</span></button>
+  }
+</div>

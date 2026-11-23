@@ -1,42 +1,33 @@
 import { Injectable, signal } from '@angular/core';
 
-export type Toast = { id: string; type: 'success' | 'error' | 'info' | 'warn'; title?: string; message: string; timeout?: number };
+export type Toast = { id: string; type: 'success' | 'error' | 'info' | 'warn'; title?: string; message: string };
 
 @Injectable({ providedIn: 'root' })
 export class NotificationService {
-  private toasts = signal<Toast[]>([]);
-  private banner = signal<string | null>(null);
+  readonly list = signal<Toast[]>([]);
 
-  get list() { return this.toasts; }
+  private push(type: Toast['type'], message: string, title?: string, timeout = 4000) {
+    const id = crypto.randomUUID();
+    this.list.update((l) => [...l, { id, type, title, message }]);
+    setTimeout(() => this.remove(id), timeout);
+  }
 
-  // helper for templates/components to get the current array value
-  getAll() { return this.toasts(); }
+  success(message: string, title?: string) { this.push('success', message, title); }
+  error(message: string, title?: string) { this.push('error', message, title, 6000); }
+  info(message: string, title?: string) { this.push('info', message, title); }
+  warn(message: string, title?: string) { this.push('warn', message, title, 5000); }
 
-  // banner helpers (top-of-page notification)
-  showBanner(message: string, timeout = 3000) {
-    this.banner.set(message);
-    if (timeout && timeout > 0) {
-      setTimeout(() => this.hideBanner(), timeout);
+  /** Run a store action and toast its error message instead of throwing. */
+  attempt<T>(fn: () => T, ok?: string): T | undefined {
+    try {
+      const r = fn();
+      if (ok) this.success(ok);
+      return r;
+    } catch (e) {
+      this.error((e as Error).message);
+      return undefined;
     }
   }
 
-  hideBanner() { this.banner.set(null); }
-
-  getBanner() { return this.banner; }
-
-  private push(t: Toast) {
-    this.toasts.set([...(this.toasts()) , t]);
-    if (t.timeout && t.timeout > 0) {
-      setTimeout(() => this.remove(t.id), t.timeout);
-    }
-  }
-
-  success(message: string, title?: string, timeout = 3000) { this.push({ id: Math.random().toString(36).slice(2,9), type: 'success', title, message, timeout }); }
-  error(message: string, title?: string, timeout = 5000) { this.push({ id: Math.random().toString(36).slice(2,9), type: 'error', title, message, timeout }); }
-  info(message: string, title?: string, timeout = 3000) { this.push({ id: Math.random().toString(36).slice(2,9), type: 'info', title, message, timeout }); }
-  warn(message: string, title?: string, timeout = 4000) { this.push({ id: Math.random().toString(36).slice(2,9), type: 'warn', title, message, timeout }); }
-
-  remove(id: string) {
-    this.toasts.set(this.toasts().filter(t => t.id !== id));
-  }
+  remove(id: string) { this.list.update((l) => l.filter((t) => t.id !== id)); }
 }

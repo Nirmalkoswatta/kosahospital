@@ -1,0 +1,35 @@
+.mt { margin-top: 1rem; }
+.hero-grid { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); align-items: stretch; }
+@media (max-width: 1000px) { .hero-grid { grid-template-columns: 1fr; } }
+.mini { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.next-card {
+  border-radius: 22px; padding: 1.5rem; color: #fff; min-height: 220px; display: flex; flex-direction: column; gap: 0.6rem; justify-content: center;
+  background:
+    radial-gradient(80% 80% at 100% 0%, rgba(103, 232, 249, 0.35), transparent 60%),
+    linear-gradient(135deg, var(--primary-strong), #4338ca);
+  box-shadow: var(--shadow-lg);
+}
+.next-card h2 { font-size: 1.5rem; }
+.next-card .kicker { text-transform: uppercase; letter-spacing: 0.12em; font-size: 0.75rem; font-weight: 700; opacity: 0.85; margin: 0; }
+.next-card .avatar { background: rgba(255, 255, 255, 0.2); }
+.next-card .reason { opacity: 0.85; margin: 0; }
+.next-card .btn { align-self: flex-start; }
+a.link { color: inherit; text-decoration: none; transition: transform 200ms var(--ease-out), box-shadow 200ms; }
+a.link:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+.ico.warn { background: var(--warn-soft); color: var(--warn); }
+.ico.ok { background: var(--success-soft); color: var(--success); }
+
+.bars { display: flex; align-items: flex-end; gap: 0.6rem; height: 220px; padding-top: 1rem; }
+.bar-col { flex: 1; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 0.35rem; }
+.bar { width: 100%; max-width: 44px; min-height: 4px; border-radius: 10px 10px 4px 4px; background: linear-gradient(180deg, #22d3ee, var(--primary)); transform-origin: bottom; animation: grow 700ms var(--ease-spring) both; animation-delay: calc(var(--i, 0) * 70ms); }
+@keyframes grow { from { transform: scaleY(0); } }
+.bar-n { font-weight: 700; font-size: 0.85rem; }
+.bar-l { font-size: 0.78rem; color: var(--muted); }
+
+.hbar { display: grid; grid-template-columns: 24px 130px 1fr 28px; align-items: center; gap: 0.6rem; }
+.hbar .mi { color: var(--primary); font-size: 1.15rem; }
+.hbar-name { font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hbar-track { height: 10px; border-radius: 99px; background: var(--surface-2); border: 1px solid var(--line); overflow: hidden; }
+.hbar-fill { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--primary), #6366f1); transform-origin: left; animation: growx 800ms var(--ease-out) both; }
+@keyframes growx { from { transform: scaleX(0); } }
+.hbar strong { text-align: right; }

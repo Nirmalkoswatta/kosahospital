@@ -1,0 +1,98 @@
+@if (appt(); as a) {
+  <div class="page-head">
+    <div>
+      <h1>Consultation</h1>
+      <p>{{ a.date }} at {{ a.time }} · <span class="badge" [class]="'badge ' + a.status">{{ a.status }}</span></p>
+    </div>
+    <a class="btn ghost" routerLink="/app"><span class="mi" aria-hidden="true">arrow_back</span>Back to queue</a>
+  </div>
+
+  <div class="layout">
+    <aside class="card side rise">
+      @if (patient(); as p) {
+        <div class="row">
+          <span class="avatar lg">{{ p.name | initials }}</span>
+          <div><h2>{{ p.name }}</h2><div class="small muted">{{ age() ?? '—' }} yrs · {{ p.gender }} · {{ p.bloodGroup || 'Blood group ?' }}</div></div>
+        </div>
+        <dl class="facts">
+          <div><dt>Reason</dt><dd>{{ a.reason }}</dd></div>
+          <div><dt>Phone</dt><dd>{{ p.phone || '—' }}</dd></div>
+          <div><dt>Emergency</dt><dd>{{ p.emergencyContact || '—' }}</dd></div>
+        </dl>
+        @if (p.allergies) {
+          <p class="allergy"><span class="mi" aria-hidden="true">warning</span>Allergy: {{ p.allergies }}</p>
+        }
+        <div class="sec">
+          <h3>History</h3>
+          <ul class="list history">
+            @for (r of history(); track r.id) {
+              <li><strong>{{ r.date }}</strong> — {{ r.diagnosis }}</li>
+            } @empty {
+              <li class="muted">First visit.</li>
+            }
+          </ul>
+          <a class="small" [routerLink]="['/app/patients', p.id]">Full record</a>
+        </div>
+      }
+    </aside>
+
+    <form class="card rise" style="--i: 1" (ngSubmit)="finish()">
+      <h2>Vitals</h2>
+      <div class="form-grid">
+        <label class="field"><span>Blood pressure</span><input class="input" name="bp" placeholder="120/80" [(ngModel)]="vitals.bp" /></label>
+        <label class="field"><span>Pulse (bpm)</span><input class="input" name="pulse" inputmode="numeric" [(ngModel)]="vitals.pulse" /></label>
+        <label class="field"><span>Temp (°C)</span><input class="input" name="temp" inputmode="decimal" [(ngModel)]="vitals.temp" /></label>
+        <label class="field"><span>Weight (kg)</span><input class="input" name="weight" inputmode="decimal" [(ngModel)]="vitals.weight" /></label>
+      </div>
+
+      <div class="sec">
+        <h2>Assessment</h2>
+        <div class="stack">
+          <label class="field"><span>Diagnosis</span><input class="input" name="diagnosis" required [(ngModel)]="diagnosis" /></label>
+          <label class="field"><span>Notes &amp; advice</span><textarea class="input" name="notes" [(ngModel)]="notes"></textarea></label>
+        </div>
+      </div>
+
+      <div class="sec">
+        <div class="card-head"><h2>Prescription</h2><button type="button" class="btn soft sm" (click)="addRx()"><span class="mi" aria-hidden="true">add</span>Add medicine</button></div>
+        <div class="stack">
+          @for (p of rx; track $index; let i = $index) {
+            <div class="rx rise">
+              <label class="field"><span>Medicine</span><input class="input" [name]="'drug' + i" [(ngModel)]="p.drug" /></label>
+              <label class="field"><span>Dose</span><input class="input" [name]="'dose' + i" placeholder="500 mg" [(ngModel)]="p.dose" /></label>
+              <label class="field"><span>Frequency</span>
+                <select class="input" [name]="'freq' + i" [(ngModel)]="p.frequency">
+                  <option>Once daily</option><option>Twice daily</option><option>Three times daily</option><option>At night</option><option>When needed</option>
+                </select>
+              </label>
+              <label class="field"><span>Days</span><input class="input" type="number" min="1" [name]="'days' + i" [(ngModel)]="p.days" /></label>
+              <button type="button" class="icon-btn" (click)="rx.splice(i, 1)" aria-label="Remove medicine"><span class="mi" aria-hidden="true">delete</span></button>
+            </div>
+          } @empty {
+            <p class="muted small">No medicines added.</p>
+          }
+        </div>
+      </div>
+
+      <div class="sec">
+        <div class="card-head"><h2>Extra charges</h2><button type="button" class="btn soft sm" (click)="addCharge()"><span class="mi" aria-hidden="true">add</span>Add charge</button></div>
+        <p class="small muted">Consultation fee ({{ store.me()?.fee ?? 0 | lkr }}) is billed automatically.</p>
+        <div class="stack">
+          @for (x of extra; track $index; let i = $index) {
+            <div class="bill rise">
+              <label class="field"><span>Item</span><input class="input" [name]="'lbl' + i" placeholder="e.g. Full blood count" [(ngModel)]="x.label" /></label>
+              <label class="field"><span>Amount (LKR)</span><input class="input" type="number" min="0" [name]="'amt' + i" [(ngModel)]="x.amount" /></label>
+              <button type="button" class="icon-btn" (click)="extra.splice(i, 1)" aria-label="Remove charge"><span class="mi" aria-hidden="true">delete</span></button>
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="sec row">
+        <button class="btn success" type="submit"><span class="mi" aria-hidden="true">task_alt</span>Complete visit</button>
+      </div>
+    </form>
+  </div>
+} @else {
+  <div class="card empty"><span class="mi" aria-hidden="true">search_off</span>This appointment does not exist or is not yours.</div>
+}
