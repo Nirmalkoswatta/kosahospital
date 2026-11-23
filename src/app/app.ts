@@ -1,14 +1,10 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Notifications } from './shared/notifications/notifications';
-import { NotificationBanner } from './shared/notification-banner/notification-banner';
+import { Toasts } from './shared/toasts';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, NotificationBanner, Notifications],
-  templateUrl: './app.html',
-  styleUrl: './app.scss'
+  imports: [RouterOutlet, Toasts],
+  template: `<router-outlet /><app-toasts />`,
 })
-export class App {
-  protected readonly title = signal('hospital-management');
-}
+export class App {}

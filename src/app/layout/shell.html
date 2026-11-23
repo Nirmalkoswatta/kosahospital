@@ -1,0 +1,45 @@
+<a class="skip" href="#main">Skip to content</a>
+<aside class="side" [class.open]="open()" aria-label="Main navigation">
+  <a routerLink="/" class="brand">
+    <span class="logo"><span class="mi fill" aria-hidden="true">local_hospital</span></span>
+    <span>Kosa<b>Hospital</b></span>
+  </a>
+  <p class="role-tag">{{ roleLabel() }} portal</p>
+  <nav>
+    @for (n of nav(); track n.path; let i = $index) {
+      <a class="nav-link rise" [style.--i]="i" [routerLink]="n.path" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: !!n.exact }" ariaCurrentWhenActive="page">
+        <span class="mi" aria-hidden="true">{{ n.icon }}</span>{{ n.label }}
+      </a>
+    }
+  </nav>
+  <div class="side-foot">
+    <a class="nav-link" routerLink="/app/profile" routerLinkActive="active" ariaCurrentWhenActive="page">
+      <span class="mi" aria-hidden="true">manage_accounts</span>Profile
+    </a>
+    <button class="nav-link" type="button" (click)="logout()">
+      <span class="mi" aria-hidden="true">logout</span>Sign out
+    </button>
+  </div>
+</aside>
+@if (open()) {
+  <button class="scrim" type="button" aria-label="Close menu" (click)="open.set(false)"></button>
+}
+
+<div class="content">
+  <header class="top">
+    <button class="icon-btn menu" type="button" (click)="open.set(true)" aria-label="Open menu">
+      <span class="mi" aria-hidden="true">menu</span>
+    </button>
+    <div class="grow">
+      <div class="small muted">{{ today }}</div>
+      <strong>Hello, {{ greet() }}</strong>
+    </div>
+    <a class="me" routerLink="/app/profile" aria-label="Your profile">
+      <span class="avatar">{{ me().name | initials }}</span>
+      <span class="me-text"><strong>{{ me().name }}</strong><span class="small muted">{{ roleLabel() }}</span></span>
+    </a>
+  </header>
+  <main id="main" class="page" tabindex="-1">
+    <router-outlet />
+  </main>
+</div>

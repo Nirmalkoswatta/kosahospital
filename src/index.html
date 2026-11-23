@@ -2,36 +2,18 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>HospitalManagement</title>
+  <title>Kosa Hospital</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Kosa Hospital — book appointments, see your records and pay bills online. Portals for patients, doctors and staff.">
+  <meta name="theme-color" content="#06141f">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400,0..1,0&display=block" rel="stylesheet">
 </head>
 <body>
-  <!-- Fullscreen background video (served from /public) -->
-  <video id="bg-video" autoplay muted loop playsinline preload="auto">
-    <source src="/backgrouund.mp4" type="video/mp4">
-    <!-- fallback: if video not supported, app root will still render -->
-  </video>
-
   <app-root></app-root>
-  <script>
-    // ensure bg video reliably restarts on 'ended' (some browsers restrict loop playback)
-    (function(){
-      try{
-        const v = document.getElementById('bg-video');
-        if(v){
-          v.addEventListener('ended', ()=>{
-            v.currentTime = 0;
-            // try to play again; catch any promise rejection silently
-            const p = v.play();
-            if(p && p.catch) p.catch(()=>{});
-          });
-        }
-      }catch(e){/* noop */}
-    })();
-  </script>
 </body>
 </html>

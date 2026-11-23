@@ -1,0 +1,136 @@
+<header class="nav">
+  <a routerLink="/" class="brand" aria-label="Kosa Hospital home">
+    <span class="logo"><span class="mi fill" aria-hidden="true">local_hospital</span></span>
+    <span>Kosa<b>Hospital</b></span>
+  </a>
+  <nav class="links" aria-label="Sections">
+    <a href="#departments">Departments</a>
+    <a href="#doctors">Doctors</a>
+    <a href="#portals">Portals</a>
+    <a href="#how">How it works</a>
+  </nav>
+  <div class="row">
+    @if (store.me()) {
+      <a class="btn light sm" routerLink="/app">Open portal</a>
+    } @else {
+      <a class="btn ghost sm on-dark" routerLink="/login">Sign in</a>
+      <a class="btn light sm" routerLink="/register">Get started</a>
+    }
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-copy">
+    <p class="eyebrow rise"><span class="pulse" aria-hidden="true"></span> 24/7 emergency · Colombo</p>
+    <h1 class="rise" style="--i: 1">Care that moves<br /><span class="grad">at your pace.</span></h1>
+    <p class="lead rise" style="--i: 2">
+      One hospital, three connected portals. Patients book real appointments, doctors see a clear
+      queue, and staff run the front desk and billing — all in one place.
+    </p>
+    <div class="row rise" style="--i: 3">
+      <a class="btn" routerLink="/register"><span class="mi" aria-hidden="true">calendar_add_on</span> Book an appointment</a>
+      <a class="btn ghost on-dark" routerLink="/login">Staff &amp; doctor sign in</a>
+    </div>
+    <dl class="trust rise" style="--i: 4">
+      <div><dt>{{ store.doctors().length }}+</dt><dd>Specialists</dd></div>
+      <div><dt>{{ store.departments().length }}</dt><dd>Departments</dd></div>
+      <div><dt>24/7</dt><dd>Emergency</dd></div>
+    </dl>
+  </div>
+  <app-hero-scene class="scene" />
+  <a href="#departments" class="scroll-cue" aria-label="Scroll to departments"><span class="mi" aria-hidden="true">expand_more</span></a>
+</section>
+
+<main>
+  <section id="departments" class="section">
+    <div class="section-head">
+      <p class="kicker">Departments</p>
+      <h2>Specialist care under one roof</h2>
+    </div>
+    <div class="grid cols-3">
+      @for (d of store.departments(); track d.id; let i = $index) {
+        <article class="card dept rise" [style.--i]="i" appTilt>
+          <span class="ico pop"><span class="mi" aria-hidden="true">{{ d.icon }}</span></span>
+          <h3 class="pop">{{ d.name }}</h3>
+          <p class="muted">{{ d.description }}</p>
+        </article>
+      }
+    </div>
+  </section>
+
+  <section id="doctors" class="section alt">
+    <div class="section-head">
+      <p class="kicker">Our doctors</p>
+      <h2>Meet the people who will look after you</h2>
+    </div>
+    <div class="grid cols-3">
+      @for (d of doctors(); track d.id; let i = $index) {
+        <article class="card doc rise" [style.--i]="i" appTilt="6">
+          <div class="row">
+            <span class="avatar lg pop">{{ d.name | initials }}</span>
+            <div class="grow">
+              <h3>{{ d.name }}</h3>
+              <p class="muted small">{{ d.specialty }} · {{ d.experience }} yrs</p>
+            </div>
+          </div>
+          <p class="small">{{ d.bio }}</p>
+          <div class="row between">
+            <span class="badge confirmed">{{ store.department(d.departmentId)?.name }}</span>
+            <span class="small muted">From {{ d.fee ?? 0 | lkr }}</span>
+          </div>
+        </article>
+      }
+    </div>
+  </section>
+
+  <section id="portals" class="section">
+    <div class="section-head">
+      <p class="kicker">Portals</p>
+      <h2>Built for everyone in the building</h2>
+    </div>
+    <div class="grid cols-3 perspective">
+      @for (p of portals; track p.title; let i = $index) {
+        <article class="card portal rise" [style.--i]="i" appTilt="10">
+          <span class="ico pop"><span class="mi" aria-hidden="true">{{ p.icon }}</span></span>
+          <h3 class="pop">{{ p.title }}</h3>
+          <p class="muted">{{ p.text }}</p>
+          <ul>
+            @for (pt of p.points; track pt) {
+              <li><span class="mi" aria-hidden="true">check</span>{{ pt }}</li>
+            }
+          </ul>
+        </article>
+      }
+    </div>
+  </section>
+
+  <section id="how" class="section alt">
+    <div class="section-head">
+      <p class="kicker">How it works</p>
+      <h2>From first click to follow-up</h2>
+    </div>
+    <ol class="steps">
+      @for (s of steps; track s.title; let i = $index) {
+        <li class="card rise" [style.--i]="i">
+          <span class="num">{{ i + 1 }}</span>
+          <span class="mi ico" aria-hidden="true">{{ s.icon }}</span>
+          <h3>{{ s.title }}</h3>
+          <p class="muted">{{ s.text }}</p>
+        </li>
+      }
+    </ol>
+  </section>
+
+  <section class="cta">
+    <div>
+      <h2>Need care today?</h2>
+      <p>General Medicine sees patients every day of the week. Emergency: <a href="tel:1990">1990</a>.</p>
+    </div>
+    <a class="btn light" routerLink="/register">Book now <span class="mi" aria-hidden="true">arrow_forward</span></a>
+  </section>
+</main>
+
+<footer class="footer">
+  <span>© {{ year }} Kosa Hospital</span>
+  <span class="muted">Demo build — data is stored in this browser only.</span>
+</footer>
